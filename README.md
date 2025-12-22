@@ -4,7 +4,8 @@
 [![Vue](https://img.shields.io/badge/vue-3.4-brightgreen.svg)](https://vuejs.org/)
 [![Vite](https://img.shields.io/badge/vite-5.0-blueviolet.svg)](https://vitejs.dev/)
 
-一个基于 Vue 3 + TypeScript + Vite + Tailwind CSS 构建的精美天气时钟看板。专为旧平板（如 iOS 12 的 iPad）优化，支持 PWA 离线运行和 Home Assistant 智能家居控制。
+一个基于 Vue 3 + TypeScript + Vite + Tailwind CSS 构建的精美天气时钟看板。
+将废弃iPad变为时钟看板，支持天气、农历、日历、Home Assistant 智能设备控制（通过左右滑动切换页面）。
 
 ---
 
@@ -15,14 +16,13 @@
 - **农历信息**：集成 `lunar-typescript`，提供精准的农历、干支年及节日显示。
 - **全屏日历**：内置万年历视图，支持月份切换及今天快速跳转。
 - **智能家居控制**：深度集成 Home Assistant，支持灯光、开关、窗帘电机（Cover）等设备的实时控制与状态同步。
-- **极致兼容性**：针对 iOS 12+ 进行了大量 CSS 补丁修复（如 Flex Gap、Backdrop Filter 等）。
 - **PWA 支持**：支持 iOS "添加到主屏幕"，全屏沉浸式体验，无地址栏。
 - **JSON 配置**：智能设备支持一键 JSON 导入/导出，方便跨设备同步配置。
 
 ## 📸 预览
 
-### 1. 主控制台
-![主界面](./docs/1.png)
+### 1. 时钟页面
+![时钟页面](./docs/1.png)
 
 ### 2. 智能家居控制
 ![智能控制](./docs/0.png)
