@@ -5,8 +5,26 @@ import Weather from './Weather.vue'
 
 const { h1, h2, m1, m2, s1, s2, lunar, now, showSeconds } = useTime()
 
-function toggleSeconds() {
-  showSeconds.value = !showSeconds.value
+let startX = 0
+let startY = 0
+
+function handlePointerDown(e: MouseEvent | TouchEvent) {
+  startX = 'touches' in e ? e.touches[0].clientX : e.clientX
+  startY = 'touches' in e ? e.touches[0].clientY : e.clientY
+}
+
+function handlePointerUp(e: MouseEvent | TouchEvent) {
+  const endX = 'changedTouches' in e ? e.changedTouches[0].clientX : e.clientX
+  const endY = 'changedTouches' in e ? e.changedTouches[0].clientY : e.clientY
+
+  const diffX = Math.abs(endX - startX)
+  const diffY = Math.abs(endY - startY)
+
+  // 只有当移动距离小于 10px 时，才认为是点击操作，触发秒钟切换
+  // 这样可以有效过滤掉滑动看板时的误触
+  if (diffX < 10 && diffY < 10) {
+    showSeconds.value = !showSeconds.value
+  }
 }
 </script>
 
@@ -38,7 +56,10 @@ function toggleSeconds() {
     <div
       class="clock-display text-glow tabular-nums mb-4 cursor-pointer transition-all duration-500"
       :class="{ 'with-seconds': showSeconds }"
-      @click="toggleSeconds"
+      @mousedown="handlePointerDown"
+      @mouseup="handlePointerUp"
+      @touchstart="handlePointerDown"
+      @touchend="handlePointerUp"
     >
       <Digit :value="h1" :trigger="showSeconds ? now.getTime() : Math.floor(now.getTime() / 60000)" />
       <Digit :value="h2" :trigger="showSeconds ? now.getTime() : Math.floor(now.getTime() / 60000)" />
