@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.11.0](https://github.com/teojs/clock-dashboard/compare/v1.10.0...v1.11.0) (2025-12-29)
+
+
+### Features
+
+* **docker:** add Docker support with build and publish workflow ([9059627](https://github.com/teojs/clock-dashboard/commit/9059627a80b15d80c8328fa0efcc3d92e9ce12ff))
+* **weather:** implement city search functionality in WeatherSettingsModal ([df704cd](https://github.com/teojs/clock-dashboard/commit/df704cdac2c1cc76ac78b67e2b957857e47b13d4))
+
+
+### Bug Fixes
+
+* **weather:** update location mode handling and improve UI for coordinates input in WeatherSettingsModal ([493c712](https://github.com/teojs/clock-dashboard/commit/493c712e8ce142f57eccb2ae8e3718a32dae134d))
+
 ## [1.10.0](https://github.com/teojs/clock-dashboard/compare/v1.9.0...v1.10.0) (2025-12-26)
 
 
