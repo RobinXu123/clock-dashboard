@@ -87,7 +87,7 @@ pnpm build
 
 ### 5. Docker 部署
 
-#### 使用预构建镜像（推荐）
+#### 使用预构建镜像
 
 ```bash
 # 拉取最新镜像
@@ -109,7 +109,7 @@ docker build -t clock-dashboard:latest .
 docker run -d -p 8080:80 --name clock-dashboard clock-dashboard:latest
 ```
 
-#### 使用 Docker Compose
+#### 使用 Docker Compose（推荐）
 
 创建 `docker-compose.yml` 文件：
 
@@ -129,6 +129,21 @@ services:
 
 ```bash
 docker-compose up -d
+```
+
+#### 自动更新
+
+由于本项目会不定时优化和更新，如果是群晖Docker部署，建议添加自动更新脚本。
+
+控制面板 → 任务计划 → 新增 → 计划的任务 → 用户定义的脚本
+
+在任务设置 → 用户定义的脚本 → 填入以下内容：
+
+```bash
+cd /volume1/docker/your_project_folder
+docker-compose pull
+docker-compose up -d --remove-orphans
+docker image prune -f
 ```
 
 ---
@@ -161,6 +176,10 @@ http:
   ]
 }
 ```
+
+## ⚠️ 注意事项
+
+第三方接口以及HA接口都是https请求，所以自部署需要通过https访问。
 
 ## 📄 开源协议
 
