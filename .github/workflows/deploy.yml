@@ -38,6 +38,10 @@ jobs:
       - name: Build
         run: pnpm build
 
+      - name: Inject Visitor Badge
+        run: |
+          sed -i 's|<!-- VISITOR_BADGE_PLACEHOLDER -->|<div style="width: 0;height: 0;overflow: hidden;"><img src="https://visitor-badge.laobi.icu/badge?page_id=${{ github.repository }}" alt="visitors"></div>|' dist/index.html
+
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
