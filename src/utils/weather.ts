@@ -82,3 +82,14 @@ export function mapWmoCode(code: number, isDay: boolean = true): WeatherInfo {
     icon,
   }
 }
+
+export function getAqiInfo(aqi: number | undefined) {
+  if (aqi === undefined) return { label: '--', color: 'text-white/40' }
+
+  if (aqi <= 50) return { label: '优', color: 'text-green-400' }
+  if (aqi <= 100) return { label: '良', color: 'text-yellow-400' }
+  if (aqi <= 150) return { label: '轻度', color: 'text-orange-400' }
+  if (aqi <= 200) return { label: '中度', color: 'text-red-400' }
+  if (aqi <= 300) return { label: '重度', color: 'text-purple-400' }
+  return { label: '严重', color: 'text-red-900' }
+}

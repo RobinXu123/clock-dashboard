@@ -4,7 +4,7 @@ import { defineStore } from 'pinia'
 import { ref, watch } from 'vue'
 import { searchCities as searchCitiesApi } from '../api/geocoding'
 import { getCurrentPosition, reverseGeocode as reverseGeocodeApi } from '../api/location'
-import { fetchWeatherData } from '../api/weather'
+import { fetchAirQualityData, fetchWeatherData } from '../api/weather'
 import { mapWmoCode } from '../utils/weather'
 
 export type LocationMode = 'auto' | 'coords' | 'city'
@@ -22,6 +22,7 @@ export const useWeatherStore = defineStore('weather', () => {
 
   // --- Runtime State ---
   const weatherData = ref<any>(null)
+  const airQualityData = ref<any>(null)
   const loading = ref(false)
   const locationText = ref('定位中...')
   const weatherInfo = ref<WeatherInfo>({ text: '正在获取', icon: mapWmoCode(-1).icon })
@@ -29,9 +30,13 @@ export const useWeatherStore = defineStore('weather', () => {
 
   async function fetchWeather(lat: number, lon: number) {
     try {
-      const data = await fetchWeatherData(lat, lon)
-      weatherData.value = data
-      weatherInfo.value = mapWmoCode(data.current.weather_code, data.current.is_day === 1)
+      const [wData, aData] = await Promise.all([
+        fetchWeatherData(lat, lon),
+        fetchAirQualityData(lat, lon),
+      ])
+      weatherData.value = wData
+      airQualityData.value = aData
+      weatherInfo.value = mapWmoCode(wData.current.weather_code, wData.current.is_day === 1)
       loading.value = false
     }
     catch (error) {
@@ -189,6 +194,7 @@ export const useWeatherStore = defineStore('weather', () => {
     loading,
     locationText,
     weatherInfo,
+    airQualityData,
     // Actions
     updateWeather,
     searchCities,

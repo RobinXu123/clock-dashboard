@@ -1,15 +1,18 @@
 <script setup lang="ts">
-import { Droplets, PersonStanding, Zap } from 'lucide-vue-next'
+import { Droplets, PersonStanding, Wind, Zap } from 'lucide-vue-next'
 import { storeToRefs } from 'pinia'
-import { onMounted, onUnmounted, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useWeatherStore } from '../stores/weather'
+import { getAqiInfo } from '../utils/weather'
 import WeatherSettingsModal from './WeatherSettingsModal.vue'
 
 const weatherStore = useWeatherStore()
-const { weatherData, loading, locationText, weatherInfo, refreshInterval } = storeToRefs(weatherStore)
+const { weatherData, loading, locationText, weatherInfo, refreshInterval, airQualityData } = storeToRefs(weatherStore)
 
 const showSettings = ref(false)
 let weatherTimer: number
+
+const aqiInfo = computed(() => getAqiInfo(airQualityData.value?.current?.us_aqi))
 
 function setupTimer() {
   if (weatherTimer) clearInterval(weatherTimer)
@@ -75,21 +78,39 @@ onUnmounted(() => {
 
     <!-- 环境数据 -->
     <div class="flex flex-col justify-center items-center md:items-end gap-3 text-white text-3xl tabular-nums">
-      <div class="flex items-center gap-3">
-        <span id="humidity-val">
-          {{ weatherData ? weatherData.current.relative_humidity_2m : '--' }}%
-        </span>
-        <Droplets class="w-8 h-8 text-blue-500/60" />
-      </div>
-      <div class="flex items-center gap-3">
-        <span id="apparent-temp-val">
-          {{ weatherData ? Math.round(weatherData.current.apparent_temperature) : '--' }}°C
-        </span>
-        <PersonStanding class="w-8 h-8 text-orange-500/60" />
-        <span id="uv-val">
-          {{ weatherData ? Math.round(weatherData.hourly.uv_index[weatherData.current_hour_index]) : '--' }}
-        </span>
-        <Zap class="w-8 h-8 text-yellow-500/60" />
+      <div class="grid grid-cols-2 gap-3">
+        <div class="flex items-center justify-end gap-3">
+          <span id="humidity-val">
+            {{ weatherData ? weatherData.current.relative_humidity_2m : '--' }}%
+          </span>
+          <Droplets class="w-8 h-8 text-blue-500/60" />
+        </div>
+
+        <div v-if="airQualityData" class="flex items-center justify-end gap-3">
+          <div class="flex items-start gap-2">
+            <span id="aqi-val" :class="aqiInfo.color">
+              {{ airQualityData.current.us_aqi }}
+            </span>
+            <span id="aqi-label" class="text-sm opacity-60 ml-[-4px]">
+              {{ aqiInfo.label }}
+            </span>
+          </div>
+          <Wind class="w-8 h-8 text-teal-500/60" />
+        </div>
+
+        <div class="flex items-center justify-end gap-3">
+          <span id="apparent-temp-val">
+            {{ weatherData ? Math.round(weatherData.current.apparent_temperature) : '--' }}°C
+          </span>
+          <PersonStanding class="w-8 h-8 text-orange-500/60" />
+        </div>
+
+        <div class="flex items-center justify-end gap-3">
+          <span id="uv-val">
+            {{ weatherData ? Math.round(weatherData.hourly.uv_index[weatherData.current_hour_index]) : '--' }}
+          </span>
+          <Zap class="w-8 h-8 text-yellow-500/60" />
+        </div>
       </div>
     </div>
   </div>

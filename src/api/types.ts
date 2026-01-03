@@ -18,6 +18,12 @@ export interface WeatherApiResponse {
   current_hour_index?: number
 }
 
+export interface AirQualityApiResponse {
+  current: {
+    us_aqi: number
+  }
+}
+
 export interface NominatimSearchResult {
   name: string
   display_name: string
