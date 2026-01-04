@@ -106,9 +106,9 @@ function save() {
     @mouseup.stop
   >
     <div class="absolute top-0 left-0 right-0 bottom-0 bg-black/80" @click="emit('close')" />
-    <div class="bg-neutral-900 p-6 md:p-8 rounded-3xl border border-white/10 w-full max-w-2xl text-white max-h-[90vh] flex flex-col relative">
-      <div class="flex items-center justify-between mb-6 flex-shrink-0">
-        <h3 class="text-2xl font-bold">
+    <div class="bg-neutral-900 p-6 rounded-3xl border border-white/10 w-full max-w-xl text-white flex flex-col relative">
+      <div class="flex items-center justify-between mb-4 flex-shrink-0">
+        <h3 class="text-2xl font-medium tracking-wide">
           Home Assistant 配置
         </h3>
         <div class="flex items-center gap-2">
@@ -129,8 +129,8 @@ function save() {
         </div>
       </div>
 
-      <div class="space-y-6 overflow-y-auto pr-2 flex-1">
-        <div v-if="!isJsonMode" class="space-y-6">
+      <div class="space-y-6 flex-1">
+        <div v-if="!isJsonMode" class="space-y-6 overflow-y-auto max-h-[55vh] border border-white/10 rounded-2xl p-3">
           <div>
             <label class="block text-sm opacity-50 mb-2 uppercase tracking-widest">HA 地址</label>
             <input
@@ -186,11 +186,11 @@ function save() {
           </div>
         </div>
 
-        <div v-else class="space-y-3">
+        <div v-else class="space-y-3 flex flex-col">
           <textarea
             v-model="jsonInput"
-            rows="18"
-            class="w-full bg-white/5 border border-white/10 text-white font-mono text-sm rounded-xl px-4 py-3 outline-none focus:border-white/30"
+            rows="16"
+            class="w-full flex-1 bg-white/5 border border-white/10 text-white font-mono text-sm rounded-xl px-4 py-3 outline-none focus:border-white/30"
             placeholder="{&quot;url&quot;: &quot;http://...&quot;, &quot;token&quot;: &quot;...&quot;, &quot;entities&quot;: [{&quot;id&quot;: &quot;light.living_room&quot;, &quot;name&quot;: &quot;客厅灯&quot;}]}"
           />
           <div class="flex justify-between items-center text-[10px] opacity-30 px-1">
@@ -205,8 +205,8 @@ function save() {
         </div>
       </div>
 
-      <div class="pt-6 mt-2 border-t border-white/10 flex-shrink-0">
-        <button class="w-full py-4 bg-white text-black font-bold rounded-2xl hover:bg-opacity-90 transition-all shadow-xl" @click="save">
+      <div class="pt-6 flex-shrink-0">
+        <button class="w-full py-3 bg-white text-black font-bold rounded-2xl hover:bg-opacity-90 transition-all shadow-xl" @click="save">
           保存并应用
         </button>
       </div>

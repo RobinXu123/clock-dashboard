@@ -15,7 +15,7 @@ function toggleSeconds() {
     <!-- 日期与农历 -->
     <div class="flex flex-col md:flex-row items-center md:items-start gap-6 w-full justify-center">
       <div class="flex items-center gap-4">
-        <div class="date-day-big text-glow">
+        <div class="date-day-big">
           {{ now.getDate() }}
         </div>
         <div class="flex flex-col mt-2">
@@ -36,7 +36,7 @@ function toggleSeconds() {
 
     <!-- 时钟显示 -->
     <div
-      class="clock-display text-glow tabular-nums mb-4 cursor-pointer transition-all duration-500"
+      class="clock-display tabular-nums mb-4 cursor-pointer transition-all duration-500"
       :class="{ 'with-seconds': showSeconds }"
       @click="toggleSeconds"
     >
@@ -74,7 +74,7 @@ function toggleSeconds() {
   font-size: 8rem; /* iOS 12 Fallback: 约 80px */
   line-height: 1;
   font-weight: 800;
-  background: linear-gradient(to bottom, #ffffff, #666666);
+  background: linear-gradient(to bottom, #ffffff, rgba(255, 255, 255, 0.7));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }

@@ -21,10 +21,6 @@ body {
   color: white;
 }
 
-.text-glow {
-  text-shadow: 0 0 45px var(--accent-glow);
-}
-
 /* --- iOS 12 兼容性补丁 (不再依赖 @supports) --- */
 
 /* 1. Flex 间距修复 - 为所有使用的 gap 增加 margin */
