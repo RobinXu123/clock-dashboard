@@ -21,8 +21,6 @@
 > 本项目为纯前端项目，所有接口均为直连，不存在隐私泄露风险。
 > 直接访问在线地址也可以安全使用 Home Assistant，无需私有部署。
 >
-> 如果你的HA无法支持HTTPS，可以使用这个地址：[http://clock.teojs.cn](http://clock.teojs.cn)
->
 > 第三方接口以及 HA 接口都是 HTTPS 请求，自部署需要通过 HTTPS 访问。
 
 ---
