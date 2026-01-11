@@ -110,12 +110,19 @@ defineExpose({ refreshToday })
         >
           <div class="day-number-wrapper flex flex-col items-center justify-center">
             <span class="text-2xl md:text-3xl font-bold">{{ day.date.getDate() }}</span>
-            <span
-              class="lunar-text text-sm font-normal mt-1 text-center"
-              :class="day.lunar.isFestival ? 'text-blue-300 opacity-100' : 'opacity-60'"
-            >
-              {{ day.lunar.date }}
-            </span>
+            <div class="lunar-text text-sm font-normal mt-1 text-center">
+              <span
+                :class="day.lunar.isFestival ? 'text-blue-300 opacity-100' : 'opacity-60'"
+              >
+                {{ day.lunar.date }}
+              </span>
+              <template v-if="day.lunar.holiday">
+                <span class="opacity-60"> · </span>
+                <span :class="day.lunar.holiday === '休' ? 'text-red-400' : 'text-orange-300'">
+                  {{ day.lunar.holiday }}
+                </span>
+              </template>
+            </div>
           </div>
         </div>
       </div>

@@ -21,4 +21,5 @@ export interface LunarInfo {
   year: string
   isFestival: boolean
   festival?: string
+  holiday?: string // 如：休、调休
 }
