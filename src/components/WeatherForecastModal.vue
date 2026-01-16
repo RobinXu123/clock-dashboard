@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import type { DailyWeatherApiResponse } from '../api/types'
-import { X } from 'lucide-vue-next'
+import { RefreshCw, Settings } from 'lucide-vue-next'
 import { storeToRefs } from 'pinia'
-import { computed, onMounted, ref, watch } from 'vue'
-import { fetchDailyWeatherData } from '../api/weather'
+import { computed, onMounted, watch } from 'vue'
+import { useConfigStore } from '../stores/config'
 import { useWeatherStore } from '../stores/weather'
 import { mapWmoCode } from '../utils/weather'
 
@@ -16,46 +15,58 @@ const emit = defineEmits<{
 }>()
 
 const weatherStore = useWeatherStore()
-const { locationText } = storeToRefs(weatherStore)
-const dailyWeatherData = ref<DailyWeatherApiResponse | null>(null)
-const loading = ref(false)
+const configStore = useConfigStore()
+const { locationText, weatherData, loading } = storeToRefs(weatherStore)
+const { showDrawer, activeTab } = storeToRefs(configStore)
 
-const forecastDays = computed(() => {
-  if (!dailyWeatherData.value) return []
+interface ForecastDay {
+  dayName: string
+  dateText: string
+  weatherInfo: ReturnType<typeof mapWmoCode>
+  tempMax: number
+  tempMin: number
+  precipitationProbability: number
+  isToday: boolean
+}
 
-  const { daily } = dailyWeatherData.value
+const forecastDays = computed<ForecastDay[]>(() => {
+  if (!weatherData.value?.daily?.time?.length) return []
+
+  const { daily } = weatherData.value
   return daily.time
-    .slice(1, 6)
-    .map((time, index) => {
+    .slice(0, 5)
+    .map((time: string, index: number) => {
       const date = new Date(time)
-      const isTomorrow = index === 0
-      const isDayAfterTomorrow = index === 1
+      const isToday = index === 0
+      const isTomorrow = index === 1
 
-      const dayName = isTomorrow
-        ? '明天'
-        : isDayAfterTomorrow
-          ? '后天'
+      const dayName = isToday
+        ? '今天'
+        : isTomorrow
+          ? '明天'
           : ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][date.getDay()]
 
       const dateText = `${date.getMonth() + 1}/${date.getDate()}`
-      const actualIndex = index + 1
-      const weatherInfo = mapWmoCode(daily.weather_code[actualIndex], true)
+      const weatherInfo = mapWmoCode(daily.weather_code[index], true)
 
       return {
         dayName,
         dateText,
         weatherInfo,
-        tempMax: Math.round(daily.temperature_2m_max[actualIndex]),
-        tempMin: Math.round(daily.temperature_2m_min[actualIndex]),
-        precipitationProbability: daily.precipitation_probability_max[actualIndex] || 0,
+        tempMax: Math.round(daily.temperature_2m_max[index]),
+        tempMin: Math.round(daily.temperature_2m_min[index]),
+        precipitationProbability: daily.precipitation_probability_max[index] || 0,
+        isToday,
       }
     })
 })
 
+const isLoading = computed(() => loading.value || forecastDays.value.length === 0)
+
 const tempRange = computed(() => {
   if (forecastDays.value.length === 0) return { min: 0, max: 0, range: 0 }
 
-  const allTemps = forecastDays.value.flatMap(day => [day.tempMin, day.tempMax])
+  const allTemps = forecastDays.value.flatMap((day: ForecastDay) => [day.tempMin, day.tempMax])
   const min = Math.min(...allTemps)
   const max = Math.max(...allTemps)
   const range = max - min
@@ -73,31 +84,34 @@ function getTempBarPosition(tempMin: number, tempMax: number) {
   return { left, width }
 }
 
-async function loadForecast() {
-  loading.value = true
-  try {
-    const { lat, lon } = await weatherStore.getCurrentCoords()
-    dailyWeatherData.value = await fetchDailyWeatherData(lat, lon)
-  }
-  catch (error) {
-    console.error('Failed to load forecast:', error)
-  }
-  finally {
-    loading.value = false
-  }
+function getTempDotPosition(temp: number) {
+  const { min, range } = tempRange.value
+  if (range === 0) return 50
+
+  const position = ((temp - min) / range) * 100
+  return Math.min(100, Math.max(0, position))
 }
 
 watch(() => props.show, (newValue) => {
-  if (newValue) {
-    loadForecast()
+  if (newValue && !weatherData.value) {
+    weatherStore.updateWeather()
   }
 })
 
 onMounted(() => {
-  if (props.show) {
-    loadForecast()
+  if (props.show && !weatherData.value) {
+    weatherStore.updateWeather()
   }
 })
+
+function refreshForecast() {
+  weatherStore.updateWeather()
+}
+
+function openSettings() {
+  activeTab.value = 'weather'
+  showDrawer.value = true
+}
 
 function handleClose() {
   emit('close')
@@ -122,31 +136,39 @@ function handleOverlayClick(e: MouseEvent) {
       @touchend.stop
     >
       <div
-        class="max-h-[80vh] flex flex-col relative bg-neutral-950 rounded-3xl max-w-2xl w-full mx-4 overflow-hidden border border-white/20"
+        class="max-h-[80vh] flex flex-col relative bg-neutral-950 rounded-3xl max-w-2xl w-full mx-4 border border-white/20"
       >
         <div class="absolute inset-20 bg-blue-900/10 rounded-full blur-3xl pointer-events-none" />
 
-        <!-- 关闭按钮 -->
-        <button
-          class="absolute top-4 right-4 z-10 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all hover:rotate-90 duration-300"
-          @click.stop.prevent="handleClose"
-        >
-          <X class="w-6 h-6 text-white" />
-        </button>
-
         <!-- 标题 -->
-        <div class="px-8 pt-8 pb-6">
+        <div class="px-8 pt-8 pb-6 flex items-center justify-between gap-4">
           <h2 class="text-3xl font-bold text-white flex items-center gap-2">
-            <span>未来5天预报</span>
+            <span>5日天气预报</span>
             <span class="text-white/40">·</span>
             <span class="text-white/60 text-2xl">{{ locationText }}</span>
           </h2>
+          <div class="flex items-center gap-2">
+            <button
+              class="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300"
+              @click="openSettings"
+            >
+              <Settings class="w-5 h-5 text-white" />
+            </button>
+            <button
+              class="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300"
+              :class="{ 'opacity-60 pointer-events-none': loading }"
+              :disabled="loading"
+              @click="refreshForecast"
+            >
+              <RefreshCw class="w-5 h-5 text-white" :class="{ 'animate-spin': loading }" />
+            </button>
+          </div>
         </div>
 
         <!-- 天气列表 -->
         <div class="px-8 pb-8 overflow-y-auto">
           <!-- 骨架屏 -->
-          <div v-if="loading" class="space-y-3">
+          <div v-if="isLoading" class="space-y-3">
             <div
               v-for="i in 5"
               :key="`skeleton-${i}`"
@@ -219,13 +241,18 @@ function handleOverlayClick(e: MouseEvent) {
                 <span class="text-lg font-medium text-blue-300 tabular-nums w-10 text-right">{{ day.tempMin }}°</span>
 
                 <!-- 温度区间条 -->
-                <div class="relative flex-1 h-2 bg-white/10 rounded-full overflow-hidden">
+                <div class="relative flex-1 h-2 bg-white/10 rounded-full">
                   <div
                     class="absolute h-full bg-gradient-to-r from-blue-400 to-orange-400 rounded-full transition-all duration-500"
                     :style="{
                       left: `${getTempBarPosition(day.tempMin, day.tempMax).left}%`,
                       width: `${getTempBarPosition(day.tempMin, day.tempMax).width}%`,
                     }"
+                  />
+                  <div
+                    v-if="day.isToday && weatherData?.current?.temperature_2m !== undefined"
+                    class="absolute top-1/2 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white"
+                    :style="{ left: `${getTempDotPosition(weatherData.current.temperature_2m)}%` }"
                   />
                 </div>
 
