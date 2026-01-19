@@ -179,7 +179,7 @@ function handleOverlayClick(e: MouseEvent) {
             <!-- 左侧骨架 -->
             <div class="flex items-center gap-4 flex-1">
               <!-- 日期骨架 -->
-              <div class="flex flex-col gap-2 min-w-[70px]">
+              <div class="flex flex-col gap-2 w-[100px]">
                 <div class="h-6 w-16 bg-white/10 rounded animate-pulse" />
                 <div class="h-4 w-12 bg-white/10 rounded animate-pulse" />
               </div>
@@ -215,7 +215,7 @@ function handleOverlayClick(e: MouseEvent) {
             <!-- 左侧：日期、天气、降雨 -->
             <div class="flex items-center gap-4 flex-1">
               <!-- 日期 -->
-              <div class="flex flex-col items-start min-w-[70px]">
+              <div class="flex flex-col items-start w-[100px]">
                 <span class="text-xl font-semibold text-white">{{ day.dayName }}</span>
                 <span class="text-sm text-white/60">{{ day.dateText }}</span>
               </div>

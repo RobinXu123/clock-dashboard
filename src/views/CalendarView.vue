@@ -79,13 +79,13 @@ const calendarDays = computed(() => {
 
 const weekHeaders = computed(() => {
   const headers = [
-    t('weekdays.short.0'),
-    t('weekdays.short.1'),
-    t('weekdays.short.2'),
-    t('weekdays.short.3'),
-    t('weekdays.short.4'),
-    t('weekdays.short.5'),
-    t('weekdays.short.6'),
+    t('weekdays.shortSimple.0'),
+    t('weekdays.shortSimple.1'),
+    t('weekdays.shortSimple.2'),
+    t('weekdays.shortSimple.3'),
+    t('weekdays.shortSimple.4'),
+    t('weekdays.shortSimple.5'),
+    t('weekdays.shortSimple.6'),
   ]
   if (calendarConfig.value.weekStartDay === 1) {
     return [headers[1], headers[2], headers[3], headers[4], headers[5], headers[6], headers[0]]

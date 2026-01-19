@@ -9,6 +9,7 @@
   },
   "weekdays": {
     "short": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+    "shortSimple": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
     "long": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
   },
   "tabs": {
