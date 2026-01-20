@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.19.0](https://github.com/teojs/clock-dashboard/compare/v1.18.0...v1.19.0) (2026-01-20)
+
+
+### Features
+
+* add new feedback issue template in Chinese to enhance user reporting experience ([31cb495](https://github.com/teojs/clock-dashboard/commit/31cb4955d56ca97063a7545844150885c2bb6a0d))
+* enhance SmartHomeSettings with layout configuration options, update idle timeout for homepage redirection, and improve localization for layout settings ([a9fefb5](https://github.com/teojs/clock-dashboard/commit/a9fefb51bf591a49a066a9099cc8531b5f897a1c))
+* integrate eruda for enhanced debugging in development, update postcss configuration and dependencies for improved styling capabilities ([786e6fe](https://github.com/teojs/clock-dashboard/commit/786e6feb106318e8e07a284606069a599ca16543))
+* integrate vue-i18n for multilingual support across components and settings, enhancing user experience with language selection and localization ([93174c2](https://github.com/teojs/clock-dashboard/commit/93174c23ca841aa94ff1931cd517c47b27536da7))
+
 ## [1.18.0](https://github.com/teojs/clock-dashboard/compare/v1.17.0...v1.18.0) (2026-01-16)
 
 
