@@ -79,10 +79,10 @@ onUnmounted(() => {
       </div>
       <div class="flex flex-col items-end justify-between font-medium">
         <span id="temp-max" class="text-red-200">
-          {{ weatherData ? Math.round(Math.max(...weatherData.hourly.temperature_2m)) : '--' }}°
+          {{ weatherData ? Math.round(weatherData.daily.temperature_2m_min?.[0]) : '--' }}°
         </span>
         <span id="temp-min" class="text-blue-200">
-          {{ weatherData ? Math.round(Math.min(...weatherData.hourly.temperature_2m)) : '--' }}°
+          {{ weatherData ? Math.round(weatherData.daily.temperature_2m_max?.[0]) : '--' }}°
         </span>
       </div>
     </div>
